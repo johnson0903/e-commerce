@@ -26,6 +26,7 @@
         <a
           class="nav-link"
           href="#"
+          @click.prevent="signout"
         >Sign out</a>
       </li>
     </ul>
@@ -34,7 +35,18 @@
 
 <script>
 export default {
-
+  name: 'Navbar',
+  methods: {
+    signout () {
+      const api = `${process.env.VUE_APP_API}/logout`
+      const vm = this
+      this.$http.post(api).then(response => {
+        if (response.data.success) {
+          vm.$router.push('/login')
+        }
+      })
+    }
+  }
 }
 </script>
 
