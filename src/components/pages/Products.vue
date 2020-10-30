@@ -42,10 +42,10 @@
           <td>{{ product.category }}</td>
           <td>{{ product.title }}</td>
           <td class="text-right">
-            {{ product.origin_price }}
+            {{ product.origin_price | currency }}
           </td>
           <td class="text-right">
-            {{ product.price }}
+            {{ product.price | currency }}
           </td>
 
           <td>
@@ -385,7 +385,6 @@ export default {
   },
   created () {
     this.getProducts()
-    this.$bus.$emit('message:push', '訊息測試', 'success')
   },
   methods: {
     getProducts (page = 1) {
@@ -414,6 +413,7 @@ export default {
       $('#delProductModal').modal('show')
     },
     updateProduct () {
+      console.log(this)
       let api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product`
       let httpMethod = 'post'
       const vm = this
