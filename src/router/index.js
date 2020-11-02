@@ -22,6 +22,7 @@ const routes = [
     path: '/admin',
     name: 'Dashboard',
     component: Dashboard,
+    meta: { requiresAuth: true },
     children: [
       {
         path: 'products',
@@ -40,20 +41,18 @@ const routes = [
         name: 'Coupons',
         component: Products,
         meta: { requiresAuth: true }
+      },
+      {
+        path: '/customer_order',
+        name: 'CustomerOrder',
+        component: CustomerOrder
       }
     ]
   },
   {
     path: '/',
-    name: 'Dashboard',
-    component: Dashboard,
-    children: [
-      {
-        path: 'customer_order',
-        name: 'CustomerOrder',
-        component: CustomerOrder
-      }
-    ]
+    name: 'CustomerOrder',
+    component: CustomerOrder
   }
 
 ]
