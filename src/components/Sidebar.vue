@@ -35,7 +35,7 @@
             訂單列表
           </router-link>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <router-link
             class="nav-link"
             active-class="active"
@@ -44,7 +44,7 @@
             <i class="fas fa-ticket-alt" />
             優惠券
           </router-link>
-        </li>
+        </li> -->
       </ul>
       <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
         <span>模擬功能</span>
