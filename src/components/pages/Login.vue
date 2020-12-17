@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Alert />
     <form
       class="card  box mx-auto"
       @submit.prevent="signin"
@@ -36,8 +37,12 @@
 </template>
 
 <script>
+import Alert from '../AlertMessage'
 export default {
   name: 'Login',
+  components: {
+    Alert
+  },
   data () {
     return {
       user: {
@@ -54,6 +59,8 @@ export default {
       this.$http.post(api, vm.user).then(response => {
         if (response.data.success) {
           vm.$router.push('/admin/products')
+        } else {
+          vm.$bus.$emit('message:push', response.data.message, 'danger')
         }
       })
     }
