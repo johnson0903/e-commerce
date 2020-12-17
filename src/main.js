@@ -9,18 +9,19 @@ import App from './App.vue'
 import router from './router'
 import './bus'
 import currencyFilter from './filters/currency'
-
+import dateFilter from './filters/date'
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 Vue.component('Loading', Loading)
 Vue.filter('currency', currencyFilter)
-
+Vue.filter('date', dateFilter)
 axios.defaults.withCredentials = true
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     const api = `${process.env.VUE_APP_API}/api/user/check`
     axios.post(api).then(response => {
+      console.log(response)
       if (response.data.success) {
         next()
       } else {
