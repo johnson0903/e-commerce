@@ -2,14 +2,17 @@
   <div>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <div class="container">
-        <a
+        <router-link
+          to="/index"
           class="navbar-brand"
-          href="/"
-        ><img
-          src="https://cdn.cybassets.com/s/files/8891/theme/27159/assets/img/navbar_logo.png?1567651523"
-          alt=""
-          height="30"
-        ></a>
+        >
+          <img
+            src="https://cdn.cybassets.com/s/files/8891/theme/27159/assets/img/navbar_logo.png?1567651523"
+            alt=""
+            height="30"
+          >
+        </router-link>
+
         <button
           class="navbar-toggler"
           type="button"
@@ -51,20 +54,93 @@
               >板身</a>
             </li>
           </ul>
-          <form class="form-inline mt-2 mt-md-0">
-            <input
-              class="form-control mr-sm-2"
-              type="text"
-              placeholder="Search"
-              aria-label="Search"
-            >
-            <button
-              class="btn btn-outline-success my-2 my-sm-0"
-              type="submit"
-            >
-              Search
-            </button>
-          </form>
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <button
+                id="cartDropdownLink"
+
+                class="btn btn-light dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="fas fa-lg fa-shopping-bag" />
+                <span
+                  v-show="cart.carts.length"
+                  class="badge badge-pill badge-danger"
+                >{{ cart.carts.length }}</span>
+              </button>
+              <div
+                class="dropdown-menu dropdown-menu-right"
+                aria-labelledby="cartDropdownLink"
+              >
+                <table
+                  class="table"
+                >
+                  <thead>
+                    <th />
+                    <th>品名</th>
+                    <th width="80">
+                      數量
+                    </th>
+                    <th class="text-right">
+                      單價
+                    </th>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="item in cart.carts"
+                      :key="item.id"
+                    >
+                      <td class="align-middle">
+                        <button
+                          type="button"
+                          class="btn btn-outline-danger btn-sm"
+                          @click="removeCartItem(item.id)"
+                        >
+                          <i class="far fa-trash-alt" />
+                        </button>
+                      </td>
+                      <td class="align-middle">
+                        {{ item.product.title }}
+                      </td>
+                      <td class="align-middle">
+                        {{ item.qty }}/{{ item.product.unit }}
+                      </td>
+                      <td class="align-middle text-right">
+                        {{ item.final_total }}
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td
+                        colspan="3"
+                        class="text-right"
+                      >
+                        總計
+                      </td>
+                      <td class="text-right">
+                        {{ cart.total }}
+                      </td>
+                      <td
+
+                        class="text-right"
+                      >
+                        <button
+                          v-show="cart.carts.length"
+                          class="btn btn-success"
+                          @click="createOrder"
+                        >
+                          結帳
+                        </button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
@@ -141,9 +217,60 @@
             </a>
           </div>
         </div>
-
+        <div class="col-md-12 my-3">
+          <ul
+            id="pills-tab"
+            class="nav nav-tabs mb-3"
+            role="tablist"
+          >
+            <li class="nav-item">
+              <a
+                id="pills-home-tab"
+                href="#"
+                class="nav-link active"
+                data-toggle="pill"
+                role="tab"
+                aria-selected="true"
+                @click.prevent="filterType = 'all'"
+              >All</a>
+            </li>
+            <li class="nav-item">
+              <a
+                id="pills-profile-tab"
+                href="#"
+                class="nav-link"
+                data-toggle="pill"
+                role="tab"
+                aria-selected="false"
+                @click.prevent="filterType = '上衣'"
+              >上衣</a>
+            </li>
+            <li class="nav-item">
+              <a
+                id="pills-contact-tab"
+                href="#"
+                class="nav-link"
+                data-toggle="pill"
+                role="tab"
+                aria-selected="false"
+                @click.prevent="filterType = '滑板'"
+              >滑板</a>
+            </li>
+            <li class="nav-item">
+              <a
+                id="pills-contact-tab"
+                href="#"
+                class="nav-link"
+                data-toggle="pill"
+                role="tab"
+                aria-selected="false"
+                @click.prevent="filterType = '滑板鞋'"
+              >滑板鞋</a>
+            </li>
+          </ul>
+        </div>
         <div
-          v-for="product in products"
+          v-for="product in filteredProducts"
           :key="product.id"
           class="col-md-4 mb-4"
         >
@@ -210,88 +337,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row mt-4 justify-content-center">
-        <div class="col-md-4">
-          <table class="table">
-            <thead>
-              <th />
-              <th>品名</th>
-              <th>數量</th>
-              <th class="text-right">
-                單價
-              </th>
-            </thead>
-            <tbody>
-              <tr
-                v-for="item in cart.carts"
-                :key="item.id"
-              >
-                <td class="align-middle">
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger btn-sm"
-                    @click="removeCartItem(item.id)"
-                  >
-                    <i class="far fa-trash-alt" />
-                  </button>
-                </td>
-                <td class="align-middle">
-                  {{ item.product.title }}
-                  <!-- <div class="text-success" v-if="item.coupon">
-          已套用優惠券
-        </div> -->
-                </td>
-                <td class="align-middle">
-                  {{ item.qty }}/{{ item.product.unit }}
-                </td>
-                <td class="align-middle text-right">
-                  {{ item.final_total }}
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td
-                  colspan="3"
-                  class="text-right"
-                >
-                  總計
-                </td>
-                <td class="text-right">
-                  {{ cart.total }}
-                </td>
-              </tr>
-            <!-- <tr>
-              <td
-                colspan="3"
-                class="text-right text-success"
-              >
-                折扣價
-              </td>
-              <td class="text-right text-success">
-                {{ cart.final_total }}
-              </td>
-            </tr> -->
-            </tfoot>
-          </table>
-        </div>
-
-      <!-- <div class="input-group mb-3 input-group-sm">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="請輸入優惠碼"
-        >
-        <div class="input-group-append">
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-          >
-            套用優惠碼
-          </button>
-        </div>
-      </div> -->
       </div>
     </div>
     <footer class="bg-dark text-light py-3">
@@ -434,12 +479,38 @@ export default {
   data () {
     return {
       products: [],
+      filterType: 'all',
       selectedProduct: {},
       cart: {},
       status: {
         loadingItem: ''
       },
-      isLoading: false
+      isLoading: false,
+      form: {
+        user: {
+          name: 'johnson0903',
+          email: 'johnson50701@gmail.com',
+          tel: '0912345678',
+          address: '新北市新店區幸福路1號'
+        },
+        message: ''
+      }
+    }
+  },
+  computed: {
+    filteredProducts () {
+      var vm = this
+      if (vm.filterType === 'all') {
+        return vm.products
+      } else {
+        var tempProducts = []
+        vm.products.forEach(item => {
+          if (item.category === vm.filterType) {
+            tempProducts.push(item)
+          }
+        })
+        return tempProducts
+      }
     }
   },
   created () {
@@ -489,6 +560,7 @@ export default {
       vm.isLoading = true
       this.$http.get(url).then((response) => {
         vm.cart = response.data.data
+        console.log(vm.cart)
         vm.isLoading = false
       })
     },
@@ -498,6 +570,16 @@ export default {
       vm.isLoading = true
       this.$http.delete(url).then((response) => {
         vm.getCart()
+        vm.isLoading = false
+      })
+    },
+    createOrder () {
+      const vm = this
+      const url = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_CUSTOMPATH}/order`
+      const order = vm.form
+      vm.isLoading = true
+      this.$http.post(url, { data: order }).then(response => {
+        console.log('訂單已建立', response)
         vm.isLoading = false
       })
     }
@@ -514,5 +596,8 @@ export default {
 }
 .card-text {
   height: 100px;
+}
+.dropdown-menu {
+  width: 400px;
 }
 </style>
