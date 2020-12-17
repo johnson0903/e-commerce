@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/pages/Login'
 import Products from '@/components/pages/Products'
+import Orders from '@/components/pages/Orders'
 import CustomerOrder from '@/components/pages/CustomerOrder'
 
 Vue.use(VueRouter)
@@ -11,7 +12,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '*',
-    redirect: 'login'
+    redirect: '/'
+  },
+  {
+    path: '/',
+    name: 'CustomerOrder',
+    component: CustomerOrder
   },
   {
     path: '/login',
@@ -33,32 +39,20 @@ const routes = [
       {
         path: 'orders',
         name: 'Orders',
-        component: Products,
+        component: Orders,
         meta: { requiresAuth: true }
-      },
-      {
-        path: 'coupons',
-        name: 'Coupons',
-        component: Products,
-        meta: { requiresAuth: true }
-      },
-      {
-        path: '/customer_order',
-        name: 'CustomerOrder',
-        component: CustomerOrder
       }
+      // {
+      //   path: '/customer_order',
+      //   name: 'CustomerOrder',
+      //   component: CustomerOrder
+      // }
     ]
-  },
-  {
-    path: '/',
-    name: 'CustomerOrder',
-    component: CustomerOrder
   }
 
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
